@@ -2,51 +2,70 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
+// 1. Define your repo name and base path
+const repoName = 'task-sparkle-react'
+const basePath = `/${repoName}/`
+
 export default defineConfig({
-  // 1. This is the only place your repo name should be
-  base: '/task-sparkle-react/', 
+  // 2. Set the base path
+  base: basePath, 
 
   plugins: [
     react(),
     VitePWA({
       registerType: 'autoUpdate',
       
-      // 2. This tells the service worker to cache the icons
-      includeAssets: [
-        'pwa-192x192.png',
-        'pwa-512x512.png',
-        'pwa-maskable-512x512.png'
-      ],
+      // 3. Add the workbox config from your example
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,json,ttf,woff,woff2}'],
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts-cache',
+              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 }, // 1 year
+              cacheableResponse: { statuses: [0, 200] }
+            }
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'gstatic-fonts-cache',
+              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 }, // 1 year
+              cacheableResponse: { statuses: [0, 200] }
+            }
+          }
+        ]
+      },
 
+      // 4. Configure the manifest just like your working example
       manifest: {
+        id: basePath,
         name: 'Task Sparkle',
         short_name: 'TaskSparkle',
         description: 'A modern to-do and task management app.',
         theme_color: '#ffffff',
         background_color: '#ffffff',
-        
-        // 3. Set scope and start_url to be relative to your base
-        // Vite will turn these into '/task-sparkle-react/'
-        scope: '.',
-        start_url: '.',
-        
         display: 'standalone',
+        scope: basePath,
+        start_url: basePath,
 
-        // 4. Icon paths are now relative to the 'public' folder
-        // Vite will turn these into '/task-sparkle-react/pwa-192x192.png'
+        // 5. Manually add the base path to all icon 'src' URLs
         icons: [
           {
-            src: 'pwa-192x192.png',
+            src: `${basePath}pwa-192x192.png`,
             sizes: '192x192',
             type: 'image/png',
           },
           {
-            src: 'pwa-512x512.png',
+            src: `${basePath}pwa-512x512.png`,
             sizes: '512x512',
             type: 'image/png',
           },
           {
-            src: 'pwa-maskable-512x512.png',
+            src: `${basePath}pwa-maskable-512x512.png`,
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable',
