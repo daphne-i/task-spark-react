@@ -2,14 +2,13 @@ import React, { useState, useMemo } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
-// --- 1. Import icons (MdFilterList removed) ---
 import {
   MdCleaningServices,
   MdNotes,
   MdDarkMode,
   MdLightMode,
   MdAdd,
-} from 'react-icons/md'; // Material Design Icons
+} from 'react-icons/md';
 
 import { db, type Task } from '../db/db';
 import { useTaskStore } from '../store/taskStore';
@@ -23,7 +22,7 @@ import { ScratchPadScreen } from './ScratchPadScreen';
 
 import styles from './HomeScreen.module.css';
 
-// --- Helper function to map priority string to number for sorting ---
+// Helper function to map priority string to number for sorting
 const priorityToSortNumber = (priority: Task['priority']): number => {
   switch (priority) {
     case 'High':
@@ -48,12 +47,12 @@ export const HomeScreen: React.FC = () => {
 
   const { width, height } = useWindowSize();
 
-  // --- Modal State ---
+  // Modal State
   const [isTaskModalOpen, setTaskModalOpen] = useState(false);
   const [isScratchPadOpen, setScratchPadOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
-  // --- Database Live Queries ---
+  // Database Live Queries
   const categories = useLiveQuery(() => db.categories.toArray());
 
   const tasks = useLiveQuery(async () => {
@@ -69,57 +68,62 @@ export const HomeScreen: React.FC = () => {
 
     // Apply multi-level sorting
     filteredTasks.sort((a, b) => {
-      // Sort by completion status (incomplete first)
-      if (a.isCompleted !== b.isCompleted) {
-        return a.isCompleted ? 1 : -1;
-      }
-      // Sort by due date (earliest first, nulls/undefined last)
+      if (a.isCompleted !== b.isCompleted) return a.isCompleted ? 1 : -1;
       if (a.dueDate && b.dueDate) {
         if (a.dueDate.getTime() !== b.dueDate.getTime()) {
           return a.dueDate.getTime() - b.dueDate.getTime();
         }
-      } else if (a.dueDate) {
-        return -1;
-      } else if (b.dueDate) {
-        return 1;
-      }
-      // Sort by priority (highest first)
+      } else if (a.dueDate) return -1;
+      else if (b.dueDate) return 1;
       const priorityA = priorityToSortNumber(a.priority);
       const priorityB = priorityToSortNumber(b.priority);
-      if (priorityA !== priorityB) {
-        return priorityB - priorityA;
-      }
-      // Fallback sort by ID
+      if (priorityA !== priorityB) return priorityB - priorityA;
       return (a.id ?? 0) - (b.id ?? 0);
     });
 
     return filteredTasks;
   }, [activeCategoryFilter]);
 
-  // --- Memoized Calculations ---
-  const { progress, pendingTodayText } = useMemo(() => {
+  // --- FIX: Updated Memoized Calculations ---
+  const { progress, headerText } = useMemo(() => {
     const allTasks = tasks || [];
-    const total = allTasks.length;
-    if (total === 0) {
-      return { progress: 0, pendingTodayText: 'You have no tasks.' };
-    }
-    const completed = allTasks.filter((t) => t.isCompleted).length;
-    const progressPercent = (completed / total) * 100;
+    const totalTasks = allTasks.length; // This is 'm'
 
+    if (totalTasks === 0) {
+      return {
+        progress: 0,
+        headerText: 'You have no tasks.',
+      };
+    }
+
+    // Calculate total progress
+    const completed = allTasks.filter((t) => t.isCompleted).length;
+    const progressPercent = (completed / totalTasks) * 100;
+
+    // Calculate pending today
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const tomorrowStart = new Date(todayStart.getTime() + 24 * 60 * 60 * 1000);
-    const pendingTodayCount = allTasks.filter((t) => !t.isCompleted && t.dueDate && t.dueDate >= todayStart && t.dueDate < tomorrowStart).length;
-    let pendingText = '';
-    if (pendingTodayCount === 0) {
-      pendingText = 'No tasks due today.';
-    } else {
-      pendingText = `You have ${pendingTodayCount} task${pendingTodayCount > 1 ? 's' : ''} due today.`;
-    }
-    return { progress: progressPercent, pendingTodayText: pendingText };
+    
+    const pendingTodayCount = allTasks.filter((t) => { // This is 'n'
+      return (
+        !t.isCompleted &&
+        t.dueDate &&
+        t.dueDate >= todayStart &&
+        t.dueDate < tomorrowStart
+      );
+    }).length;
+
+    // Build the exact string from home_screen.dart
+    const headerText = `You have ${pendingTodayCount} task${pendingTodayCount === 1 ? '' : 's'} pending today, out of ${totalTasks} total task${totalTasks === 1 ? '' : 's'}.`;
+
+    return {
+      progress: progressPercent,
+      headerText: headerText,
+    };
   }, [tasks]);
 
-  // --- Event Handlers ---
+  // Event Handlers
   const handleOpenEditTask = (task: Task) => {
     setEditingTask(task);
     setTaskModalOpen(true);
@@ -154,14 +158,15 @@ export const HomeScreen: React.FC = () => {
           <header className={styles.header}>
             <div className={styles.headerText}>
               <h1>Hello!</h1>
-              <p>{pendingTodayText}</p>
+              {/* --- FIX: Use the new headerText variable --- */}
+              <p>{headerText}</p>
             </div>
             <button onClick={toggleTheme} className={`${styles.iconButton} ${styles.themeToggle}`} aria-label="Toggle theme">
               {theme === 'light' ? <MdDarkMode /> : <MdLightMode />}
             </button>
           </header>
 
-          {/* 2. Progress Bar */}
+          {/* 2. Progress Bar (This now shows total progress) */}
           <ModernProgressBar progress={progress} />
 
           {/* 3. Task List Header */}

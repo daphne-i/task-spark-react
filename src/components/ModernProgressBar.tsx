@@ -1,3 +1,5 @@
+import React from 'react';
+// This import connects the CSS file
 import styles from './ModernProgressBar.module.css';
 
 type Props = {
