@@ -55,8 +55,8 @@ export default defineConfig({
         // 5. Manually add the base path to all icon 'src' URLs
         icons: [
           {
-            src: `${basePath}pwa-192x192.png`,
-            sizes: '192x192',
+            src: `${basePath}pwa-128x128.png`,
+            sizes: '128x128',
             type: 'image/png',
           },
           {
