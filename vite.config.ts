@@ -15,7 +15,11 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       
-      // 3. Add the workbox config from your example
+      // 3. Add injectRegister (from your pantrypal config)
+      // This is critical for getting registerSW.js to work
+      injectRegister: 'auto',
+
+      // 4. Add the workbox config from your example
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json,ttf,woff,woff2}'],
         runtimeCaching: [
@@ -40,7 +44,7 @@ export default defineConfig({
         ]
       },
 
-      // 4. Configure the manifest just like your working example
+      // 5. Configure the manifest just like your working example
       manifest: {
         id: basePath,
         name: 'Task Sparkle',
@@ -52,7 +56,7 @@ export default defineConfig({
         scope: basePath,
         start_url: basePath,
 
-        // 5. Manually add the base path to all icon 'src' URLs
+        // 6. Manually add the base path to all icon 'src' URLs
         icons: [
           {
             src: `${basePath}pwa-128x128.png`,
