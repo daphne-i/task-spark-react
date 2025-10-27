@@ -22,16 +22,12 @@ import { ScratchPadScreen } from './ScratchPadScreen';
 
 import styles from './HomeScreen.module.css';
 
-// Helper function to map priority string to number for sorting
+// Helper function
 const priorityToSortNumber = (priority: Task['priority']): number => {
   switch (priority) {
-    case 'High':
-      return 3;
-    case 'Medium':
-      return 2;
-    case 'Low':
-    default:
-      return 1;
+    case 'High': return 3;
+    case 'Medium': return 2;
+    case 'Low': default: return 1;
   }
 };
 
@@ -57,16 +53,13 @@ export const HomeScreen: React.FC = () => {
 
   const tasks = useLiveQuery(async () => {
     let query;
-
     if (activeCategoryFilter !== null) {
       query = db.tasks.where('categoryId').equals(activeCategoryFilter);
     } else {
       query = db.tasks.toCollection();
     }
-
     const filteredTasks = await query.toArray();
-
-    // Apply multi-level sorting
+    // Sorting logic...
     filteredTasks.sort((a, b) => {
       if (a.isCompleted !== b.isCompleted) return a.isCompleted ? 1 : -1;
       if (a.dueDate && b.dueDate) {
@@ -80,32 +73,26 @@ export const HomeScreen: React.FC = () => {
       if (priorityA !== priorityB) return priorityB - priorityA;
       return (a.id ?? 0) - (b.id ?? 0);
     });
-
     return filteredTasks;
   }, [activeCategoryFilter]);
 
-  // --- FIX: Updated Memoized Calculations ---
-  const { progress, headerText } = useMemo(() => {
+  // --- FIX 1: Update useMemo to return the numbers ---
+  const { progress, totalTasks, pendingTodayCount } = useMemo(() => {
     const allTasks = tasks || [];
-    const totalTasks = allTasks.length; // This is 'm'
+    const total = allTasks.length;
 
-    if (totalTasks === 0) {
-      return {
-        progress: 0,
-        headerText: 'You have no tasks.',
-      };
+    if (total === 0) {
+      return { progress: 0, totalTasks: 0, pendingTodayCount: 0 };
     }
 
-    // Calculate total progress
     const completed = allTasks.filter((t) => t.isCompleted).length;
-    const progressPercent = (completed / totalTasks) * 100;
+    const progressPercent = (completed / total) * 100;
 
-    // Calculate pending today
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const tomorrowStart = new Date(todayStart.getTime() + 24 * 60 * 60 * 1000);
     
-    const pendingTodayCount = allTasks.filter((t) => { // This is 'n'
+    const pendingToday = allTasks.filter((t) => {
       return (
         !t.isCompleted &&
         t.dueDate &&
@@ -114,12 +101,10 @@ export const HomeScreen: React.FC = () => {
       );
     }).length;
 
-    // Build the exact string from home_screen.dart
-    const headerText = `You have ${pendingTodayCount} task${pendingTodayCount === 1 ? '' : 's'} pending today, out of ${totalTasks} total task${totalTasks === 1 ? '' : 's'}.`;
-
     return {
       progress: progressPercent,
-      headerText: headerText,
+      totalTasks: total,
+      pendingTodayCount: pendingToday,
     };
   }, [tasks]);
 
@@ -128,12 +113,10 @@ export const HomeScreen: React.FC = () => {
     setEditingTask(task);
     setTaskModalOpen(true);
   };
-
   const handleOpenNewTask = () => {
     setEditingTask(null);
     setTaskModalOpen(true);
   };
-
   const handleClearCompleted = () => {
     if (window.confirm('Are you sure you want to delete all completed tasks? This cannot be undone.')) {
       clearCompleted();
@@ -151,22 +134,32 @@ export const HomeScreen: React.FC = () => {
           onConfettiComplete={resetConfetti}
         />
       )}
-
       <main className={styles.homeScreen}>
         <GlassmorphicContainer className={styles.mainContainer}>
           {/* 1. Header */}
           <header className={styles.header}>
             <div className={styles.headerText}>
               <h1>Hello!</h1>
-              {/* --- FIX: Use the new headerText variable --- */}
-              <p>{headerText}</p>
+              {/* --- FIX 2: Build the text here with spans --- */}
+              <p>
+                {totalTasks === 0 ? (
+                  'You have no tasks.'
+                ) : (
+                  <>
+                    You have <span className={styles.highlightNumber}>{pendingTodayCount}</span>
+                    {pendingTodayCount === 1 ? ' task' : ' tasks'} pending today, out of{' '}
+                    <span className={styles.highlightNumber}>{totalTasks}</span>
+                    {totalTasks === 1 ? ' total task' : ' total tasks'}.
+                  </>
+                )}
+              </p>
             </div>
             <button onClick={toggleTheme} className={`${styles.iconButton} ${styles.themeToggle}`} aria-label="Toggle theme">
               {theme === 'light' ? <MdDarkMode /> : <MdLightMode />}
             </button>
           </header>
 
-          {/* 2. Progress Bar (This now shows total progress) */}
+          {/* 2. Progress Bar */}
           <ModernProgressBar progress={progress} />
 
           {/* 3. Task List Header */}
@@ -188,7 +181,6 @@ export const HomeScreen: React.FC = () => {
                   </option>
                 ))}
               </select>
-
               <button
                 onClick={handleClearCompleted}
                 className={`${styles.iconButton} ${styles.clearButton}`}

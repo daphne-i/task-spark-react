@@ -195,3 +195,15 @@
   background: #fff;
   color: #000;
 }
+
+.highlightNumber {
+  font-weight: 800;
+  font-size: 1.1em;
+  color: #333; /* Very dark grey */
+  margin: 0 2px;
+}
+
+/* For dark theme, use the light sky blue */
+[data-theme='dark'] .highlightNumber {
+  color: #64B5F6;
+}
