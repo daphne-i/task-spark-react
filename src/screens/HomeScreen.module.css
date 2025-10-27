@@ -171,3 +171,27 @@
   --border-color: rgba(255, 255, 255, 0.2);
   --list-item-bg: rgba(0, 0, 0, 0.2);
 }
+
+/* ... (all your existing styles) ... */
+
+/* --- ADD THIS CODE TO THE END OF THE FILE --- */
+
+/* Explicitly fix dark mode for the filter menu */
+[data-theme='dark'] .filterMenu {
+  background: rgba(0, 0, 0, 0.3); /* A dark background */
+  color: #fff; /* Explicit white text */
+  border-color: rgba(255, 255, 255, 0.2); /* The dark theme border */
+}
+
+/* Style the <option> elements inside the dropdown */
+.filterMenu option {
+  /* This styles the dropdown list itself */
+  background: #333;
+  color: #fff;
+}
+
+/* Make sure light mode options look correct too */
+[data-theme='light'] .filterMenu option {
+  background: #fff;
+  color: #000;
+}

@@ -86,7 +86,6 @@ export const useTaskStore = create<TaskStore>()(
             // 1. Calculate the next due date
             const nextDueDate = getNextDueDate(task.dueDate, task.recurring);
             
-            // --- FIX: Disable the lint warning for this line ---
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { id: _id, ...taskWithoutId } = task; // Destructure 'id' out
             
@@ -112,8 +111,10 @@ export const useTaskStore = create<TaskStore>()(
         await db.tasks.update(id, { isCompleted: !currentStatus });
       },
       
+      // --- FIX: This is a more robust way to delete ---
+      // It filters all tasks where isCompleted is true, then deletes them.
       clearCompleted: async () => {
-        await db.tasks.where('isCompleted').equals(1).delete();
+        await db.tasks.filter(task => task.isCompleted === true).delete();
       },
       
       // --- State Implementation ---

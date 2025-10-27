@@ -32,21 +32,19 @@
 }
 
 .checkbox {
-  /* Give it some space from the priority bar */
   margin-left: 10px; 
-  /* Make it larger */
   width: 20px;
   height: 20px;
   cursor: pointer;
-  accent-color: var(--grad-color-3); /* Use a theme color */
+  accent-color: var(--grad-color-3);
 }
 
 .textContainer {
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* Takes up all available space */
+  flex-grow: 1;
   gap: 0.1rem;
-  overflow: hidden; /* Prevents long text from breaking layout */
+  overflow: hidden;
 }
 
 .title {
@@ -75,18 +73,28 @@
   color: var(--text-color-dark, #fff);
 }
 
+/* --- FIX: Style the edit button as an icon button --- */
 .editButton {
-  background: var(--button-bg-color, rgba(0, 0, 0, 0.05));
+  background: transparent;
+  border: none;
   color: inherit;
-  border: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
+  opacity: 0.6;
   cursor: pointer;
-  font-weight: 500;
-  opacity: 0.7;
-  transition: opacity 0.2s;
+  padding: 0.5rem; /* Padding for click area */
+  border-radius: 50%; /* Circular */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem; /* Icon size */
+  transition: background-color 0.2s, opacity 0.2s;
 }
 
 .listItem:hover .editButton {
+  /* Only show full opacity when hovering the list item */
   opacity: 1;
+}
+
+.editButton:hover {
+  /* Add a hover effect for the button itself */
+  background-color: var(--button-hover-bg, rgba(0, 0, 0, 0.1));
 }

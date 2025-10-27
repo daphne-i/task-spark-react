@@ -2,9 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
-// --- 1. Import icons ---
+// --- 1. Import icons (MdFilterList removed) ---
 import {
-  MdFilterList,
   MdCleaningServices,
   MdNotes,
   MdDarkMode,
@@ -157,7 +156,6 @@ export const HomeScreen: React.FC = () => {
               <h1>Hello!</h1>
               <p>{pendingTodayText}</p>
             </div>
-            {/* --- 2. Use Icon Button for Theme Toggle --- */}
             <button onClick={toggleTheme} className={`${styles.iconButton} ${styles.themeToggle}`} aria-label="Toggle theme">
               {theme === 'light' ? <MdDarkMode /> : <MdLightMode />}
             </button>
@@ -170,8 +168,6 @@ export const HomeScreen: React.FC = () => {
           <div className={styles.taskListHeader}>
             <h2>Your Tasks</h2>
             <div className={styles.taskListActions}>
-              {/* --- 3. Filter Dropdown (Add Icon?) --- */}
-              {/* You could optionally add MdFilterList next to the dropdown */}
               <select
                 className={styles.filterMenu}
                 value={activeCategoryFilter ?? 'all'}
@@ -188,7 +184,6 @@ export const HomeScreen: React.FC = () => {
                 ))}
               </select>
 
-              {/* --- 4. Use Icon Buttons for Actions --- */}
               <button
                 onClick={handleClearCompleted}
                 className={`${styles.iconButton} ${styles.clearButton}`}
@@ -230,7 +225,6 @@ export const HomeScreen: React.FC = () => {
         </GlassmorphicContainer>
 
         {/* 5. Floating Action Button (FAB) */}
-        {/* --- 5. Use Icon in FAB --- */}
         <button onClick={handleOpenNewTask} className={styles.fab} aria-label="Add new task">
           <MdAdd />
         </button>

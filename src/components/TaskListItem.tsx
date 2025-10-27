@@ -2,8 +2,10 @@ import React from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, type Task, type TaskPriority } from '../db/db';
 import { useTaskStore } from '../store/taskStore';
+// --- 1. Import the Edit icon ---
+import { MdEdit } from 'react-icons/md';
 
-import styles from './TaskListItem.module.css'; // We will create this
+import styles from './TaskListItem.module.css';
 
 // Define priority colors
 const priorityColors: Record<TaskPriority, string> = {
@@ -17,22 +19,17 @@ type Props = {
   onEdit: (task: Task) => void;
 };
 
-// This is the correct function signature
 export const TaskListItem: React.FC<Props> = ({ task, onEdit }) => {
   const { deleteTask, toggleTaskCompleted, triggerConfetti } = useTaskStore();
 
-  // Fetch the category name for this task
-  // This will update automatically if the category ever changes
   const category = useLiveQuery(
     () => db.categories.get(task.categoryId),
     [task.categoryId]
   );
 
   const handleToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Prevent the 'onEdit' click from firing when checking the box
     e.stopPropagation(); 
     
-    // Trigger confetti *before* toggling, if task is being completed
     if (!task.isCompleted) {
       triggerConfetti();
     }
@@ -40,9 +37,8 @@ export const TaskListItem: React.FC<Props> = ({ task, onEdit }) => {
   };
 
   const handleDelete = (e: React.MouseEvent) => {
-    // Prevent the 'onEdit' click from firing on right-click/long-press
     e.stopPropagation();
-    e.preventDefault(); // Prevent context menu
+    e.preventDefault(); 
     
     if (window.confirm(`Are you sure you want to delete "${task.title}"?`)) {
       deleteTask(task.id!);
@@ -54,7 +50,6 @@ export const TaskListItem: React.FC<Props> = ({ task, onEdit }) => {
     onEdit(task);
   }
 
-  // --- This is the fix. We MUST return JSX ---
   return (
     <div
       className={styles.listItem}
@@ -73,7 +68,7 @@ export const TaskListItem: React.FC<Props> = ({ task, onEdit }) => {
         className={styles.checkbox}
         checked={task.isCompleted}
         onChange={handleToggle}
-        onClick={(e) => e.stopPropagation()} // Stop click from bubbling to the div
+        onClick={(e) => e.stopPropagation()}
       />
 
       {/* Task Text Content */}
@@ -88,17 +83,19 @@ export const TaskListItem: React.FC<Props> = ({ task, onEdit }) => {
           {task.title}
         </span>
         <span className={styles.subtitle}>
-          {/* Format the subtitle just like the Flutter app */}
           {task.priority}
           {category ? ` • ${category.name}` : ''}
           {task.dueDate ? ` • Due: ${task.dueDate.toLocaleDateString()}` : ''}
         </span>
       </div>
       
-      {/* Edit Button */}
-      <button className={styles.editButton} onClick={handleEdit}>
-        {/* You can use an SVG icon here later */}
-        Edit
+      {/* --- 2. Replace the text button with an icon button --- */}
+      <button
+        className={styles.editButton}
+        onClick={handleEdit}
+        aria-label="Edit task"
+      >
+        <MdEdit />
       </button>
     </div>
   );
