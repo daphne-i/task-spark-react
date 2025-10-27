@@ -1,0 +1,74 @@
+/* src/styles/AuroraBackground.css */
+
+.aurora-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  overflow: hidden;
+  background: var(--aurora-bg);
+  --aurora-color-1: #ff6b6b;
+  --aurora-color-2: #4ecdc4;
+  --aurora-color-3: #45b7d1;
+  --aurora-color-4: #f7b801;
+  --aurora-color-5: #6a82fb;
+}
+
+/* Light Mode Colors */
+html[data-mantine-color-scheme='light'] .aurora-background {
+  --aurora-bg: #f8f9fa; /* Mantine light gray */
+  --aurora-opacity: 0.3;
+}
+
+/* Dark Mode Colors */
+html[data-mantine-color-scheme='dark'] .aurora-background {
+  --aurora-bg: #1a1b1e; /* Mantine dark */
+  --aurora-opacity: 0.2;
+}
+
+.aurora-background::before,
+.aurora-background::after {
+  content: '';
+  position: absolute;
+  width: 100vmax;
+  height: 100vmax;
+  border-radius: 50%;
+  mix-blend-mode: overlay;
+  opacity: var(--aurora-opacity);
+  filter: blur(80px); /* This creates the soft, glassy effect */
+  animation: aurora-spin 20s linear infinite;
+}
+
+.aurora-background::before {
+  background: radial-gradient(
+    circle,
+    var(--aurora-color-1),
+    var(--aurora-color-2),
+    var(--aurora-color-3)
+  );
+  top: -50vmax;
+  left: -50vmax;
+}
+
+.aurora-background::after {
+  background: radial-gradient(
+    circle,
+    var(--aurora-color-4),
+    var(--aurora-color-5),
+    var(--aurora-color-1)
+  );
+  bottom: -50vmax;
+  right: -50vmax;
+  animation-direction: reverse;
+}
+
+@keyframes aurora-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

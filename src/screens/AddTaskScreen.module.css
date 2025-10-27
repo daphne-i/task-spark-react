@@ -1,0 +1,158 @@
+.formContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formInput,
+.formTextarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color, rgba(128, 128, 128, 0.3));
+  background: var(--input-bg, rgba(255, 255, 255, 0.5));
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--text-color, #000);
+}
+
+.formTextarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+[data-theme='dark'] .formInput,
+[data-theme='dark'] .formTextarea {
+  background: var(--input-bg-dark, rgba(0, 0, 0, 0.2));
+  color: var(--text-color-dark, #fff);
+}
+
+.formRow {
+  display: flex;
+  gap: 1rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-grow: 1;
+}
+
+.formGroup label {
+  font-weight: 500;
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+/* --- Reusable Button Container --- */
+.buttonContainer {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.formButton {
+  flex-grow: 1;
+  padding: 0.75rem;
+  border: 2px solid var(--button-color, #ccc);
+  background-color: transparent;
+  color: var(--text-color, #000);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  opacity: 0.6;
+}
+
+[data-theme='dark'] .formButton {
+  color: var(--text-color-dark, #fff);
+}
+
+.formButton:hover {
+  opacity: 1;
+}
+
+.buttonSelected {
+  background-color: var(--button-color);
+  color: #000; /* Text color on active button */
+  opacity: 1;
+}
+
+/* --- FIX: Frequency Grid Styles --- */
+.gridContainer {
+  flex-wrap: wrap; /* Allows items to wrap to the next line */
+  gap: 0.5rem;
+}
+
+.gridButton {
+  /* 3 items per row: 100% / 3 = 33.33%. Subtract gap. */
+  flex-grow: 1;
+  flex-basis: calc(33.333% - 0.5rem);
+  padding: 0.5rem; /* Smaller padding for grid */
+  font-size: 0.85rem;
+}
+
+/* --- FIX: Toggle Row Styles --- */
+.toggleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.toggleSwitch {
+  position: relative;
+  width: 50px;
+  height: 28px;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: var(--button-bg-color, rgba(0, 0, 0, 0.1));
+  border-radius: 34px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.toggleSwitch::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.toggleSwitch:checked {
+  background-color: var(--grad-color-3); /* Theme color */
+}
+
+.toggleSwitch:checked::before {
+  transform: translateX(22px);
+}
+
+.toggleSwitch:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+/* --- Delete Button --- */
+.deleteButton {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: none;
+  background-color: #ff6f61;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.deleteButton:hover {
+  background-color: #e65a50;
+}

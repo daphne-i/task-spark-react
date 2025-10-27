@@ -1,0 +1,118 @@
+/* The dark, semi-transparent background */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 300ms ease-in-out;
+}
+
+/* Modal open state */
+.ReactModal__Overlay--after-open {
+  opacity: 1;
+}
+
+/* Modal close state */
+.ReactModal__Overlay--before-close {
+  opacity: 0;
+}
+
+/* The modal content itself */
+.modal-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 90vh; /* Max 90% of viewport height */
+  overflow-y: auto;
+  
+  /* --- This is your Glassmorphism --- */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px) saturate(1.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  /* ---------------------------------- */
+
+  border-radius: 20px 20px 0 0;
+  padding: 20px;
+  z-index: 11;
+
+  /* Slide-up animation */
+  transform: translateY(100%);
+  transition: transform 300ms ease-in-out;
+}
+
+/* Dark mode modal */
+[data-theme='dark'] .modal-content {
+  background: rgba(30, 30, 30, 0.2);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+/* Modal open state */
+.ReactModal__Content--after-open {
+  transform: translateY(0);
+}
+
+/* Modal close state */
+.ReactModal__Content--before-close {
+  transform: translateY(100%);
+}
+
+/* --- Modal Content Styles --- */
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  margin: 0;
+}
+
+.modal-close-btn, .modal-save-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: inherit;
+}
+
+.modal-save-btn {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.scratch-pad-textarea {
+  width: 100%;
+  height: 60vh;
+  background: transparent;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  border-radius: 8px;
+  padding: 10px;
+  color: inherit;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.form-content input, .form-content textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  background: rgba(255, 255, 255, 0.5);
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+[data-theme='dark'] .form-content input, 
+[data-theme='dark'] .form-content textarea {
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+}
