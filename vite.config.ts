@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 // 1. Define your repo name and base path
-const repoName = 'task-sparkle-react'
+const repoName = 'task-spark-react'
 const basePath = `/${repoName}/`
 
 export default defineConfig({
@@ -47,8 +47,8 @@ export default defineConfig({
       // 5. Configure the manifest just like your working example
       manifest: {
         id: basePath,
-        name: 'Task Sparkle',
-        short_name: 'TaskSparkle',
+        name: 'Task Spark',
+        short_name: 'TaskSpark',
         description: 'A modern to-do and task management app.',
         theme_color: '#ffffff',
         background_color: '#ffffff',
