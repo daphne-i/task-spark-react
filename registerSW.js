@@ -1,1 +1,1 @@
-if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/task-sparkle-react/sw.js', { scope: '/task-sparkle-react/' })})}
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/task-spark-react/sw.js', { scope: '/task-spark-react/' })})}
