@@ -16,6 +16,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem; /* Space between header, progress, list */
+  height: 92vh;
 }
 
 /* 1. Header */
@@ -117,6 +118,8 @@
   max-height: 60vh; /* Make list scrollable */
   overflow-y: auto;
   padding-right: 5px; /* For scrollbar spacing */
+  flex-grow: 1;
+  min-height: 0;
 }
 
 .emptyState {
